@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>{% block title %}Puppet master{% endblock %}</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+    {% block extra_css %}{% endblock %}
+    <script src="{{ STATIC_URL }}js/jquery-latest.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</head>
+<body>
+    <div id="main">{% block main %}{% endblock %}</div>
+    {% block form %}{% endblock %}
+</body>

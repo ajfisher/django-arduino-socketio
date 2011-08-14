@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+{% load socketio_tags %}
+{% socketio %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/drive.js"></script>
+{% endblock %}
+
+{% block main %}
+
+    Drive the puppet
+    
+    <div id="coords">
+        <p>X: <span id="xval"></span></p>
+        <p>Y: <span id="yval"></span></p>
+        <p>Z: <span id="zval"></span></p>
+
+    </div>
+    <p><a href="#" id="test">test</a></p>
+{% endblock %}
