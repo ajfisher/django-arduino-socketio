@@ -28,12 +28,22 @@ You need to run the django socketio server. Please see django docs and django-so
 
     $ python manage.py runserver_socketio addr:port
     
-You'll then be able to browse to addr:port via your web browser of choice and you should see the server up and running.
+You'll then be able to browse to addr:port via your web browser of choice and you should see the server up and running. If you take various actions you'll be able to see the socket messages going through in the log.
 
 Arduino
 --------
 
-Install the Arduino pde file as per normal.
+Install the socket_interaction.pde file as per normal. This uses a common anode RGB LED to show the tilt of the various light sources so wire it up::
+
+    R = IN 3
+    G = Pin 5
+    B = Pin 6
+
+If you watch the serial output then you can see the data coming in from the python server.
 
 Mobile
 ------
+
+You'll need an iOS device that's relatively new or else an android device running Firefox. Either of these can interact with the Device Orientation API so you can get sensor data from them.
+
+Point your web browser at the IP address and start moving your phone around. From there you'll see the colour of the various R, G and B LEDs start to change in response to the tilt.
