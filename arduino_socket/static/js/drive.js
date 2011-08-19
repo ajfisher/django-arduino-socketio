@@ -1,5 +1,5 @@
 var socket;
-var room = "puppet";
+var room = "light";
 var z = 250;  // use this as a dummy for FF
 
 // use this for Firefox
@@ -9,29 +9,33 @@ window.addEventListener("MozOrientation", update_accelerometer, true);
 window.addEventListener("devicemotion", update_accelerometer, true);
 
 
-function update_accelerometer(e){
-    // gets the accelerometer vals and passes them back
-	if(!!e.x) {
-		// Firefox
-		var x = Math.round(e.x*90);
-		var y = Math.round(e.y*90);
-		//var z = 0;
-		update_text(x, y, z); // no compass value for Firefox :( you can get z accel though
-		socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'orientation'});
-		
-	} else if (!!e.accelerationIncludingGravity){
-		// Mobile Safari
-		var x = Math.round(e.gamma);
-		var y = Math.round(e.beta);
-		z = Math.round(e.alpha);
-		update_text(x, y, z);
-		socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'orientation'});
-		
-	} else {
-		//alert("you don't really support devicemotion, do you?");
-		;
-	}
-}
+        function update_accelerometer(e){
+            // gets the accelerometer vals and passes them back
+            var x, y, z = 0;
+            
+            // need to do this to normalise Firefox back to spec
+	        if(!e.gamma && !e.beta) {
+		        // Firefox
+		        e.gamma = (e.x * 90);
+		        e.beta = (e.y * 180);
+		        e.alpha = 0;
+		        e.accelerationIncludingGravity = function() {
+		        	this.x = 0;
+		        	this.y = 0;
+		        	this.z = 0;
+	        	}
+		        e.accelerationIncludingGravity.x = 0;
+		        e.accelerationIncludingGravity.y = 0;
+		        e.accelerationIncludingGravity.z = e.z;
+	        } 
+
+			x = Math.round(e.gamma); // tilt x axis
+			y = Math.round(e.beta); // tilt y axis
+			//z = Math.round(e.alpha); // tilt z axis (actually compass)
+			z=250;
+			update_text(x, y, z); // no compass value for Firefox :( you can get z accel though
+			socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'orientation'});
+        }
 
 
 function update_text(x, y, z) {
