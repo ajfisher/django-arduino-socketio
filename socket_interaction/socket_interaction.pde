@@ -7,17 +7,18 @@
   across a serial connection from the webserver to the arduino
   Takes three variables - X, Y, Z representing the sensor array
   
-  Package is made up of 6 bytes as:
+  Package is made up of 7 bytes as:
   0  255  header byte
   1  255  header byte
   2  int  0-180 val for x
-  3  int  0-180 val for y
-  4  int  high byte for z
-  5  int  low byte for z
+  3  int  high byte for y
+  4  int  low byte for y
+  5  int  high byte for z
+  6  int  low byte for z
 
 **/
 
-#define PACKAGE_LENGTH 6
+#define PACKAGE_LENGTH 7
 
 #define RED_PIN 3
 #define GREEN_PIN 5
@@ -61,6 +62,7 @@ void loop() {
             buffer_array[1] = Serial.read();
             buffer_array[2] = Serial.read();
             buffer_array[3] = Serial.read();
+            buffer_array[4] = Serial.read();
             packet_complete = true;
         } else {
             // we have half a header
@@ -103,8 +105,8 @@ void loop() {
     //Serial.println("hi");
     if (packet_complete) {
       x = buffer_array[0];
-      y = buffer_array[1];
-      z = (buffer_array[2]<<8) + buffer_array[3];
+      y = (buffer_array[1]<<8) + buffer_array[2];
+      z = (buffer_array[3]<<8) + buffer_array[4];
       Serial.print("X: ");
       Serial.print(x);
       Serial.print(" Y: ");
@@ -116,6 +118,6 @@ void loop() {
     
     // now we output to the LED
     analogWrite(RED_PIN, map(x, 0, 180, 0, 255));
-    analogWrite(GREEN_PIN, map(y, 0, 180, 0, 255));
+    analogWrite(GREEN_PIN, map(y, 0, 360, 0, 255));
     analogWrite(BLUE_PIN, map(z, 0, 360, 0, 255));
 }
