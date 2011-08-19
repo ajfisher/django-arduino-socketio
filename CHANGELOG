@@ -1,0 +1,19 @@
+Version 0.3 (19 August, 2011)
+------------------------------
+
+* Totally refactored device code so that firefox lines up with web kit using a single interface and additionally complies with the spec (as per MDN guidance).
+* Refactored urls to now use includes
+* changed puppet to light app
+* added a generic axis app that shows the state of the phone.
+
+Version 0.2 (17 August, 2011)
+-----------------------------
+
+* Web socket pushing data through to arduino via serial
+* phone pushing data via web socket to arduino over serial
+
+Version 0.1 (14 August, 2011)
+-----------------------------
+
+* Got the basic socket view working to get data
+* Got the basic interaction working to get data from the phone - discovered limitation of android values at this point in Firefox and no values from webkit.

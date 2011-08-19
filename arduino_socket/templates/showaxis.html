@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+{% load socketio_tags %}
+{% socketio %}
+    <script type="text/javascript">
+        var room = "axis";
+	    var socket;
+	    $(function() {
+	        socket = new io.Socket();
+	        socket.connect();
+	        socket.on('connect', function() {
+		        socket.subscribe(room);
+	        });
+	
+            socket.on('message', function(data) {
+                switch (data.action) {
+                    case 'position':
+                        $("#xaccel").html(data.ax);
+                        $("#yaccel").html(data.ay);
+                        $("#zaccel").html(data.az);
+                        $("#xval").html(data.px);
+                        $("#yval").html(data.py);
+                        $("#zval").html(data.pz);
+                        break;
+                }
+            });
+            
+		   	$("#test").click (function () {
+				socket.send({room: room, action: 'test'});
+			});
+		});	
+
+    
+    </script>
+{% endblock %}
+
+{% block main %}
+
+    Showing the current phone values
+    
+    <div id="coords">
+    	<a href="#" id="test">test</a>
+        <h2>Accelerometer</h2>
+        <p>X: <span id="xaccel"></span></p>
+        <p>Y: <span id="yaccel"></span></p>
+        <p>Z: <span id="zaccel"></span></p>
+        <h2>Gyro</h2>
+        <p>X: <span id="xval"></span></p>
+        <p>Y: <span id="yval"></span></p>
+        <p>Z: <span id="zval"></span></p>
+    </div>
+{% endblock %}

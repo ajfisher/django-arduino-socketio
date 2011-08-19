@@ -1,6 +1,6 @@
 from django.db import models
 
-class PuppetUser(models.Model):
+class LightUser(models.Model):
     
     name = models.CharField(max_length=20)
     session = models.CharField(max_length=20)
