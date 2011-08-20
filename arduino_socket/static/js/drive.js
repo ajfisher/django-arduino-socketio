@@ -1,15 +1,27 @@
 var socket;
 var room = "light";
-var z = 250;  // use this as a dummy for FF
 
-// use this for Firefox
-window.addEventListener("MozOrientation", update_accelerometer, true);
+var last_sent = (new Date()).getTime();
+var threshold = 100; // msec between sends
+			
+// don't need to use mozorientation at all. FF now accepts device api calls
+window.addEventListener("deviceorientation", update_gyro, true);
 
-// Mobile Safari
-window.addEventListener("devicemotion", update_accelerometer, true);
-
-
-        function update_accelerometer(e){
+function update_gyro(e) {
+	// gets the gyro position
+    var x, y, z = 0;
+    
+	x = e.gamma;
+	y = e.beta;
+	z = e.alpha; // compass
+	
+	update_text(x, y, z);
+    if ((new Date()).getTime() - last_sent > threshold) {
+		socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'orientation'});
+    }
+}
+		
+/**        function update_accelerometer(e){
             // gets the accelerometer vals and passes them back
             var x, y, z = 0;
             
@@ -31,11 +43,11 @@ window.addEventListener("devicemotion", update_accelerometer, true);
 
 			x = Math.round(e.gamma); // tilt x axis
 			y = Math.round(e.beta); // tilt y axis
-			//z = Math.round(e.alpha); // tilt z axis (actually compass)
-			z=250;
+			z = Math.round(e.alpha); // tilt z axis (actually compass)
+			//z=250;
 			update_text(x, y, z); // no compass value for Firefox :( you can get z accel though
 			socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'orientation'});
-        }
+        }**/
 
 
 function update_text(x, y, z) {
@@ -60,6 +72,7 @@ $(function() {
 	$(window).bind("mousemove", function(e) {
 		var x = e.pageX;
 		var y = e.pageY;
+		var z = 255;
 		socket.send({room: room, action: 'movement', x: x, y: y, z: z, method: 'mouse'});
 		update_text(x, y, z);
 	});

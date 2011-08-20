@@ -27,7 +27,7 @@ def message(request, socket, message):
         if message["method"] == "orientation":
             # put the vals back into +ive integer range as needed
             x += 90 #normalise 0-180
-            y += 180 # normalise 0-360
+            y += 360 # normalise 0-360
             
         if x > 180:
             x = 180
@@ -37,6 +37,8 @@ def message(request, socket, message):
             z = 0
 
         # work out the y bytes
+        # leaving this like this even though it's normalised back to 180 deg.
+        # just in case there's any more changes to firefox.
         yh = y >> 8
         if y > 255:
             yl = y - 256

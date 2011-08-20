@@ -6,51 +6,50 @@
     <script type="text/javascript">
         var room = "axis";
 	    var socket;
+	    var last_sent = (new Date()).getTime();
+	    var threshold = 100; // msec between sends
 
-        // use this for Firefox
-        window.addEventListener("MozOrientation", update_accelerometer, true);
-
-        // Mobile Safari
-        window.addEventListener("devicemotion", update_accelerometer, true);
-
-
-        function update_accelerometer(e){
-            // gets the accelerometer vals and passes them back
-            var px, py, pz, ax, ay, az = 0;
-            
-            // need to do this to normalise Firefox back to spec
-	        if(!e.gamma && !e.beta) {
-		        // Firefox
-		        e.gamma = -(e.x * (180 / Math.PI));
-		        e.beta = -(e.y * (180 / Math.PI));
-		        e.alpha = 0;
-		        e.accelerationIncludingGravity = function() {
-		        	this.x = 0;
-		        	this.y = 0;
-		        	this.z = 0;
-	        	}
-		        e.accelerationIncludingGravity.x = 0;
-		        e.accelerationIncludingGravity.y = 0;
-		        e.accelerationIncludingGravity.z = e.z;
-	        } 
-
-			px = e.gamma; // tilt x axis
-			py = e.beta; // tilt y axis
-			pz = e.alpha; // tilt z axis (actually compass)
-
-			ax = e.accelerationIncludingGravity.x;
-			ay = e.accelerationIncludingGravity.y;
-			az = e.accelerationIncludingGravity.z;		
+		var ax, ay, az, tiltx, tilty, tiltz = 0;
 			
+		// don't need to use mozorientation at all. FF now accepts device api calls
+		window.addEventListener("deviceorientation", update_gyro, true);
+
+        window.addEventListener("devicemotion", update_accel, true);
+
+		function update_gyro(e) {
+			// gets the gyro position
+			tiltx = e.gamma;
+			tilty = e.beta;
+			tiltz = e.alpha; // compass
+			
+			
+            $("#xval").html(tiltx);
+            $("#yval").html(tilty);
+            $("#zval").html(tiltz);
+            if ((new Date()).getTime() - last_sent > threshold) {
+	            send_data();
+            }
+        }
+        
+        function update_accel(e) {
+        	// gets the accelerometer values
+        	ax = e.accelerationIncludingGravity.x;
+        	ay = e.accelerationIncludingGravity.y;
+        	az = e.accelerationIncludingGravity.z;
             $("#xaccel").html(ax);
             $("#yaccel").html(ay);
             $("#zaccel").html(az);
-            $("#xval").html(px);
-            $("#yval").html(py);
-            $("#zval").html(pz);
-            
-	        socket.send({room: room, action: 'movement', ax: ax, ay: ay, az: az, px: px, py: py, pz: pz });
-	        $("#status").text("sending");
+            if ((new Date()).getTime() - last_sent > threshold) {
+	            send_data();
+            }
+        }
+
+       
+        function send_data() {
+        	//sends the current values of the phone to the server.
+        	$("#status").html("Sending");
+        	last_sent = (new Date()).getTime(); // update the time to now.
+			socket.send({room: room, action: 'movement', ax: ax, ay: ay, az: az, px: tiltx, py: tilty, pz: tiltz });
         }
         
 	    $(function() {
@@ -59,8 +58,9 @@
 	        socket.on('connect', function() {
 		        socket.subscribe(room);
 	        });
-        })
+	        
 
+        })
     
     </script>
 {% endblock %}
@@ -73,8 +73,8 @@
         <p>X: <span id="xaccel"></span></p>
         <p>Y: <span id="yaccel"></span></p>
         <p>Z: <span id="zaccel"></span></p>
-        <h2>Gyro</h2>
+        <h2>Gyro (Tilt)</h2>
         <p>X: <span id="xval"></span></p>
         <p>Y: <span id="yval"></span></p>
-        <p>Z: <span id="zval"></span></p>
+        <p>Z: <span id="zval"></span> (compass heading)</p>
 {% endblock %}
