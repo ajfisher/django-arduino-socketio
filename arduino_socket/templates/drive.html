@@ -4,6 +4,7 @@
 {% block extra_js %}
 {% load socketio_tags %}
 {% socketio %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/device.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/drive.js"></script>
 {% endblock %}
 

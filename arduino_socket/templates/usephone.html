@@ -3,6 +3,7 @@
 {% block extra_js %}
 {% load socketio_tags %}
 {% socketio %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/device.js"></script>
     <script type="text/javascript">
         var room = "axis";
 	    var socket;
@@ -12,16 +13,18 @@
 		var ax, ay, az, tiltx, tilty, tiltz = 0;
 			
 		// don't need to use mozorientation at all. FF now accepts device api calls
-		window.addEventListener("deviceorientation", update_gyro, true);
+		window.addEventListener("deviceorientation", update_gyro, false);
 
-        window.addEventListener("devicemotion", update_accel, true);
+        window.addEventListener("devicemotion", update_accel, false);
 
 		function update_gyro(e) {
 			// gets the gyro position
-			tiltx = e.gamma;
-			tilty = e.beta;
-			tiltz = e.alpha; // compass
+			var tilt = deviceOrientation(e);
 			
+			// dump into the globals for use laters.
+			tiltx = tilt.gamma;
+			tilty = tilt.beta;
+			tiltz = tilt.alpha;
 			
             $("#xval").html(tiltx);
             $("#yval").html(tilty);
@@ -33,9 +36,10 @@
         
         function update_accel(e) {
         	// gets the accelerometer values
-        	ax = e.accelerationIncludingGravity.x;
-        	ay = e.accelerationIncludingGravity.y;
-        	az = e.accelerationIncludingGravity.z;
+        	var a = deviceMotion(e);
+        	ax = a.accelerationIncludingGravity.x;
+        	ay = a.accelerationIncludingGravity.y;
+        	az = a.accelerationIncludingGravity.z;
             $("#xaccel").html(ax);
             $("#yaccel").html(ay);
             $("#zaccel").html(az);
@@ -47,7 +51,7 @@
        
         function send_data() {
         	//sends the current values of the phone to the server.
-        	$("#status").html("Sending");
+        	 $("#status").html("Sending");
         	last_sent = (new Date()).getTime(); // update the time to now.
 			socket.send({room: room, action: 'movement', ax: ax, ay: ay, az: az, px: tiltx, py: tilty, pz: tiltz });
         }
@@ -58,8 +62,6 @@
 	        socket.on('connect', function() {
 		        socket.subscribe(room);
 	        });
-	        
-
         })
     
     </script>
@@ -74,7 +76,7 @@
         <p>Y: <span id="yaccel"></span></p>
         <p>Z: <span id="zaccel"></span></p>
         <h2>Gyro (Tilt)</h2>
-        <p>X: <span id="xval"></span></p>
-        <p>Y: <span id="yval"></span></p>
-        <p>Z: <span id="zval"></span> (compass heading)</p>
+        <p>Gamma: <span id="xval"></span></p>
+        <p>Beta: <span id="yval"></span></p>
+        <p>Alpha (compass): <span id="zval"></span></p>
 {% endblock %}
