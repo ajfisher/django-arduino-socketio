@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Multiplayer asteroids{% endblock %}
+{% block extra_js %}
+{% load socketio_tags %}
+{% socketio %}
+    <script type="text/javascript">
+        var room = "asteroids";
+	    var socket;
+
+        var canv;
+        var context;
+
+        var rotation = 0;
+        var x, y = 0;
+        var vx, vy = 0;
+        
+        
+        function update_ship(ax, ay) {
+            // work out the rotation.
+            var rotval = -(ay)*2;
+            rotation += rotval;
+            
+            if (rotation < 0){
+                rotation += 360;
+            } else if (rotation > 360) {
+                rotation -= 360;
+            }
+            canv.width = canv.width;
+            draw_ship(rotation *(Math.PI/180), i*60, i*60);
+           
+        }
+
+        
+	    $(function() {
+	        socket = new io.Socket();
+	        socket.connect();
+	        socket.on('connect', function() {
+		        socket.subscribe(room);
+	        });
+	        
+            socket.on('message', function(data) {
+                switch (data.action) {
+                    case 'player_state':
+                        update_ship(data.ax, data.ay);
+                        break;
+                }
+            });
+            canv = document.getElementById("canv");
+            context = canv.getContext("2d");
+            draw_ship(0);
+        });
+        
+        function draw_ship(rot, x, y) {
+            context.save();
+            context.translate(x,y);
+            context.rotate(rot);
+            context.beginPath();
+            context.moveTo(0,0);
+            context.lineTo(-10, 15);
+            context.lineTo(0, -15);
+            context.lineTo(10, 15);
+            context.lineTo(0, 0);
+            context.strokeStyle = "#000";
+            context.stroke();
+            context.restore();
+        }
+    
+    </script>
+{% endblock %}
+
+{% block main %}
+    <canvas width="1000" height="800" id="canv"></canvas>
+{% endblock %}
