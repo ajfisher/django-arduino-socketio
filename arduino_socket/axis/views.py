@@ -8,8 +8,13 @@ def message(request, socket, message):
         ax = message["ax"]
         ay = message["ay"]
         az = message["az"]
-        px = message["px"]
-        py = message["py"]
+        try:
+            px = message["px"]
+            py = message["py"]  
+        except:
+            px = 0
+            py = 0
+            
         pz = message["pz"]
         
         socket.broadcast({
