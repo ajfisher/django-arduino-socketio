@@ -8,44 +8,25 @@
         var room = "asteroids";
 	    var socket;
 	    var last_sent = (new Date()).getTime();
-	    var threshold = 100; // msec between sends
+	    var threshold = 250; // msec between sends
 
         var canv;
         var context;
 
 		var ax, ay, az = 0;
 
-        var rotation = 0;
-        var speed = 0;
-
-        window.addEventListener("devicemotion", update_accel, true);
+        window.addEventListener("devicemotion", update_accel, false);
         
         function update_accel(e) {
         	// gets the accelerometer values
         	var a = deviceMotion(e);
         	ax = a.accelerationIncludingGravity.x;
         	ay = a.accelerationIncludingGravity.y;
-        	az = a.accelerationIncludingGravity.z;
             $("#xaccel").html(ax);
             $("#yaccel").html(ay);
-            $("#zaccel").html(az);
             if ((new Date()).getTime() - last_sent > threshold) {
 	            send_data();
             }
-            
-            /**
-            // work out the rotation.
-            var rotval = -(ay)*15;
-            rotation += rotval;
-            
-            if (rotation < 0){
-                rotation += 360;
-            } else if (rotation > 360) {
-                rotation -= 360;
-            }
-            canv.width = canv.width;
-            draw_ship(rotation *(Math.PI/180));
-           **/
         }
 
        
@@ -63,23 +44,16 @@
 		        socket.subscribe(room);
 	        });
 	        
-	        /**
-            canv = document.getElementById("canv");
-            context = canv.getContext("2d");
-            draw_ship(0);
-            **/
         });
             
     </script>
 {% endblock %}
 
 {% block main %}
-    <canvas width="200" height="200" id="canv"></canvas>
     <h1>Phone coordinates</h1>
     <p id="status">Not sending</p>
         <h2>Accelerometer</h2>
         <p>X: <span id="xaccel"></span></p>
         <p>Y: <span id="yaccel"></span></p>
-        <p>Z: <span id="zaccel"></span></p>
 
 {% endblock %}
