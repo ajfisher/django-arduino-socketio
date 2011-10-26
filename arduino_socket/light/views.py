@@ -1,10 +1,10 @@
 import serial
 
+from settings import *
+
 from django.shortcuts import get_object_or_404, render, redirect
 from django_socketio import events
 
-SERIAL_INTERFACE = "/dev/ttyUSB0"
-SERIAL_BAUD = 115200
 
 try:
     ser = serial.Serial(SERIAL_INTERFACE, SERIAL_BAUD, timeout=60)
@@ -14,6 +14,7 @@ except:
 
 @events.on_message(channel="^light")
 def message(request, socket, message):
+    #import pdb; pdb.set_trace()
     message = message[0]
     if message["action"] == "movement":
         socket.send({"action": "ack"})
@@ -51,12 +52,12 @@ def message(request, socket, message):
         else:
             zl = z
 
-        #print "x: %s y: %s z: %s" % (x, y, z)
+        print "x: %s y: %s z: %s" % (x, y, z)
         try:
             ser.write("%s%s%s%s%s%s%s" % (chr(255), chr(255), chr(x), chr(yh), chr(yl), chr(zh), chr(zl)))
         except:
             #do  nothing - this is a good test anyway.
-            print "Doing nothing as no serial"
+            print "Doing nothing as no serial connection: %s" % SERIAL_INTERFACE
         
     elif message["action"] == "test":
         # this is a test of the socket
@@ -65,10 +66,11 @@ def message(request, socket, message):
 
 
 def home (request, template="index.html"):
-    context = {"status" : "Booked"}
+    context = {}
     return render(request, template, context)
+
     
-def drive (request, template="drive.html"):
+def light (request, template="light.html"):
     context = {}
     return render(request, template, context)
     

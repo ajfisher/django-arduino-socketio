@@ -47,3 +47,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_socketio',
 )
+
+try:
+    from local_settings import *
+except:
+    pass
