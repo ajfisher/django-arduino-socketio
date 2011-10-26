@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/device.js"></script>
+    <script type="text/javascript">
+		window.addEventListener("deviceorientation", update_gyro, false);
+
+        window.addEventListener("devicemotion", update_accel, false);
+
+		function update_gyro(e) {
+			// gets the gyro position
+			var tilt = deviceOrientation(e);
+			
+			
+            $("#xval").html(tilt.gamma);
+            $("#yval").html(tilt.beta);
+            $("#zval").html(tilt.alpha);
+
+        }
+        
+        function update_accel(e) {
+        	// gets the accelerometer values
+        	var a = deviceMotion(e);
+            $("#xaccel").html(a.accelerationIncludingGravity.x);
+            $("#yaccel").html(a.accelerationIncludingGravity.y);
+            $("#zaccel").html(a.accelerationIncludingGravity.z);
+
+            $("#axaccel").html(e.acceleration.x);
+            $("#ayaccel").html(e.acceleration.y);
+            $("#azaccel").html(e.acceleration.z);
+
+        }
+
+    
+    </script>
+{% endblock %}
+
+{% block main %}
+
+    <h1>Device API values</h1>  
+        <p>If you see lots of updating numbers below then your device supports
+        the device api. If you don't you'll need to use a different device.</p>  
+        <h2>Accelerometer Including Gravity</h2>
+        <p>X: <span id="xaccel"></span></p>
+        <p>Y: <span id="yaccel"></span></p>
+        <p>Z: <span id="zaccel"></span></p>
+        <h2>Gyro (Tilt)</h2>
+        <p>Gamma: <span id="xval"></span></p>
+        <p>Beta: <span id="yval"></span></p>
+        <p>Alpha (compass): <span id="zval"></span></p>
+{% endblock %}

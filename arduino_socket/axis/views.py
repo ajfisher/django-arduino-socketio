@@ -34,3 +34,11 @@ def showaxis (request, template="showaxis.html"):
 def usephone (request, template="usephone.html"):
     context={}
     return render(request, template, context)
+    
+def devicetest (request, template="devicetest.html"):
+    context={}
+    return render(request, template, context)
+    
+def rotationtest (request, template="rotation.html"):
+    context={}
+    return render(request, template, context)

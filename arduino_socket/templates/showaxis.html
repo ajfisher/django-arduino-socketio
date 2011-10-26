@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block title %}Show device values{% endblock %}
 {% block extra_js %}
 {% load socketio_tags %}
 {% socketio %}
@@ -36,10 +36,10 @@
 {% endblock %}
 
 {% block main %}
-
-    Showing the current phone values
-    
+   
     <div id="coords">
+    	<p>Data from your phone will stream up here over web sockets if this
+    	is all working correctly</p>
         <h2>Accelerometer</h2>
         <p>X: <span id="xaccel"></span></p>
         <p>Y: <span id="yaccel"></span></p>
@@ -48,5 +48,8 @@
         <p>&gamma; (L-R tilt): <span id="xval"></span></p>
         <p>&beta; (U-D tilt): <span id="yval"></span></p>
         <p>&alpha; (compass): <span id="zval"></span></p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        
     </div>
 {% endblock %}

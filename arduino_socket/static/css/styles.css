@@ -1,5 +1,12 @@
 body {
     font-family: sans serif;
-    font-size: 20pt;
-    background-color: silver;
+    font-size: 12pt;
+    background-color: #444;
+    color: #fff9e1;
 }
+
+a {
+    color: #fff9e1;
+}
+
+

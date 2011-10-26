@@ -5,12 +5,15 @@
 {% load socketio_tags %}
 {% socketio %}
     <script type="text/javascript" src="{{STATIC_URL}}js/device.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/drive.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/light.js"></script>
 {% endblock %}
 
 {% block main %}
 
-    Drive the puppet
+    <h1>Light control demo</h1>
+    <p>By changing the orientation of the phone you can change the colour of an
+    RGB light. This will work on the X/Y axis from a desktop using a mouse
+    but you can't control z which will be static.</p>
     
     <div id="coords">
         <p>X: <span id="xval"></span></p>
@@ -18,5 +21,4 @@
         <p>Z: <span id="zval"></span></p>
 
     </div>
-    <p><a href="#" id="test">test</a></p>
 {% endblock %}

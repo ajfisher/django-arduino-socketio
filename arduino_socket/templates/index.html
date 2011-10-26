@@ -1,11 +1,26 @@
 {% extends "base.html" %}
 
+{% block title %}Django - Arduino - Web Sockets interaction demos{%endblock%}
 {% block main %}
-<p><a href="/axis/show">View the data from the phone</a></p>
-<p><a href="/axis">Use a phone to send data</a></p>
-<p><a href="/drive">Play with the light</a></p>
-<p><a href="/asteroids">Asteroids play</a></p>
-<p><a href="/asteroids/game">Watch the game</a></p>
+    <h1>Django - Arduino - Web Sockets interaction demos</h1>
+    <p>Here are a series of demos that show you how to use web sockets with django
+    and interact with arduino devices of various means</p>
+    <h2>Basics</h2>
+    <p><a href="/axis/test">View your own phone data</a> - this will test that your
+    phone can use the device API.</p>
+    <p><a href="/axis/show">View the data from the phone</a> - fire this up on your
+    desktop browser to see the data coming from your phone (switch this on before
+    you fire up the next demo on your phone)</p>
+    <p><a href="/axis/usephone">Use a phone to send data</a> - make sure your desktop
+    browser is on the link above before you go here on your mobile device</p>
+
+    <h2>Interaction demos</h2>
+    <p>These demos show how you can interact by using a phone with an arduino. The
+    relevant circuits etc are located in the readme file - more details of which are
+    at <a href="https://github.com/ajfisher/django-arduino-socketio">https://github.com/ajfisher/django-arduino-socketio</a></p>
+    
+    <p><a href="/light">Light Play</a> - change the colour of a light based on
+    the orientation of your phone.</p>
 
 
 {% endblock %}

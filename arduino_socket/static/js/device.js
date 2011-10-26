@@ -4,6 +4,8 @@
     Author: Andrew Fisher
     Date: 22/08/2011
     
+    Version: 0.1
+    
     This file is licensed under a BSD licence as per the changelog.
     
     Intro
@@ -23,7 +25,7 @@
     =====
     
     Assumes - Jquery is installed so access to $.browser object is available.
-    Install the file in your path, include it in a script tag then add your 
+    Install the file in your path, include it in a script tag (after jquery) then add your 
     eventlisteners to your page:
     
 	window.addEventListener("deviceorientation", [my_orientation_change_handler], false);
@@ -92,7 +94,7 @@
     **/
     
 // set up some constants
-var accel_multi = 1; // used to multiply the accel values if firefox
+var accel_multi = 1; // used to normalise the accel values if firefox
 
 $(function() {
     if ($.browser.mozilla) {
