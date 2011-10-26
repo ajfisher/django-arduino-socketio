@@ -1,3 +1,15 @@
+Version 0.5 (26 October, 2011)
+------------------------------
+
+* large scale changes post all my presentations to really clean up the code base and turn this into a useful package for people to experiment with
+* Removed tank tag which will be forked as a separate project
+* removed blimpy which will be a separate project
+* cleaned up the examples so it's obvious how to build the demos
+* Dropped in baseline examples in order to test each of the individual components more easily and diagnose if all the dependencies are met
+* Updated the documentation
+* included circuit diagrams
+
+
 Version 0.4 (20 August, 2011)
 -----------------------------
 
