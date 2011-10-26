@@ -15,6 +15,13 @@
   4  int  low byte for y
   5  int  high byte for z
   6  int  low byte for z
+  
+  Circuit setup:
+  
+  In this case we are using an RGB LED with a common anode, the individual
+  colours are wired per the constants defined below and is a pretty simple
+  circuit to prove the concept.
+  
 
 **/
 
@@ -31,7 +38,7 @@ int x, y, z = 0;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Welcome to the view"); 
+  Serial.println("Welcome to the light interaction"); 
   
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
@@ -72,37 +79,8 @@ void loop() {
     }
   }
             
-/**      
-      Serial.println(val, DEC);
-      //Serial.println(val);
-      if (val == 255) {
-        if (found_null) {
-            // we've got a message 
-            //Serial.println("We have a message");
-            started = true;
-            found_null = false;
-        } else {
-            found_null = true;
-        }
-      } else {
-        if (started) {
-            // we're now processing the buffer.
-            //Serial.println("message is read");
-            buffer_array[0] = Serial.read();
-            buffer_array[1] = Serial.read();
-            buffer_array[2] = Serial.read();
-            buffer_array[3] = Serial.read();
-            packet_complete = true;
-        } else {
-            found_null = false;
-            started = false;
-        }
-      }
-          
-    } **/
 
     // now we have some data we can do something with it.
-    //Serial.println("hi");
     if (packet_complete) {
       x = buffer_array[0];
       y = (buffer_array[1]<<8) + buffer_array[2];
